@@ -12,6 +12,19 @@ def decsig(value):
     '''
     return Decimal('1').copy_sign(Decimal(value))
 
+def decabs(value):
+    '''
+    Вычисление модуля числа как объекта класса Decimal
+
+            Параметры:
+                    value (Decimal): число, объект класса Decimal
+            Возвращаемое значение:
+                    abs (Decimal): число, объект класса Decimal, модуль исходного числа
+    '''
+    if (decsig(value) == Decimal('-1')):
+        return -value;
+    return value;
+
 def decisint(value):
     '''
     Проверка объекта Decimal на принадлежность к целым числам
@@ -586,9 +599,27 @@ class Interval:
         elif isinstance(expr, Decimal):
             etmp = Interval([expr, expr])
         else:
-            etmp = expr
+            etmp = Interval(expr)
         return etmp
+    
+    @staticmethod
+    def abs(x):
+        '''
+        Вычисление интервала - модуля интервала
 
+                Параметры:
+                        x (...): объект, из которого можно создать объект класса Interval;
+                Возвращаемое значение:
+                        result (Interval): объект класса Interval, модуль исходного интервала;
+                            Точность: зависит от параметров Interval.
+                            Округление: внешнее расширяющее.
+        '''
+        x = Interval.valueToInterval(x)
+        if (x.__getNullType() != 0):        
+            return Interval([Decimal("+0"), max(decabs(x.x[0]), decabs(x.x[1]))])
+        return Interval([min(decabs(x.x[0]), decabs(x.x[1])), max(decabs(x.x[0]), decabs(x.x[1]))])
+    
+    
     @staticmethod
     def sin(x):
         '''
